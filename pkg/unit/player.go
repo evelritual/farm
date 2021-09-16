@@ -14,6 +14,7 @@ type Player struct {
 	Name string
 
 	textureAtlas graphics.TextureAtlas
+	atlasPos     int
 
 	posX   int32
 	posY   int32
@@ -39,6 +40,7 @@ func NewPlayer() (*Player, error) {
 	p := &Player{
 		Name:         "Evelyn",
 		textureAtlas: pta,
+		atlasPos:     0,
 		events:       c,
 		speed:        1,
 	}
@@ -55,7 +57,7 @@ func (p *Player) Close() error {
 }
 
 func (p *Player) Draw() error {
-	err := p.textureAtlas.Draw(0, p.posX, p.posY, 1.0, 1.0, 0.0)
+	err := p.textureAtlas.Draw(p.atlasPos, p.posX, p.posY, 1.0, 1.0, 0.0)
 	if err != nil {
 		return fmt.Errorf("error drawing: %v", err)
 	}
@@ -74,18 +76,22 @@ func (p *Player) handleEvent() {
 		switch *e {
 		case event.EventDownPress:
 			p.speedY = p.speed
+			p.atlasPos = 0
 		case event.EventDownDepress:
 			p.speedY = 0
 		case event.EventLeftPress:
 			p.speedX = -p.speed
+			p.atlasPos = 1
 		case event.EventLeftDepress:
 			p.speedX = 0
 		case event.EventRightPress:
 			p.speedX = p.speed
+			p.atlasPos = 3
 		case event.EventRightDepress:
 			p.speedX = 0
 		case event.EventUpPress:
 			p.speedY = -p.speed
+			p.atlasPos = 2
 		case event.EventUpDepress:
 			p.speedY = 0
 		}
